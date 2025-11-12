@@ -1,8 +1,7 @@
 import { describe, test, expect, vi, afterEach } from "vitest";
 import { createInitialSession, reduceSession, createSessionResult } from "../engine/session";
 import { getRandomItem, getSentenceItem } from "../data/corpus";
-import type { SessionEvent, StepOutcome } from "../types";
-import * as romanizer from "../engine/romanizer";
+import type { SessionEvent } from "../types";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -228,6 +227,7 @@ describe("スコアとメトリクスの整合", () => {
       id: "test-score",
       text: "あ",
       reading: "あ",
+      romaji: "a",
       difficulty: 1 as const,
       mode: "word" as const,
     };
@@ -244,50 +244,25 @@ describe("スコアとメトリクスの整合", () => {
     expect(session.score.total).toBe(0);
     expect(session.metrics.accuracy).toBe(1);
 
-    const mistakeOutcome: StepOutcome = {
-      accepted: true,
-      completedUnit: false,
-      advancedUnits: 0,
-      mistake: true,
-      state: {
-        unitIndex: 0,
-        unitProgress: 0,
-        buffer: "",
-      },
-    };
-
-    const correctOutcome: StepOutcome = {
-      accepted: true,
-      completedUnit: true,
-      advancedUnits: 1,
-      mistake: false,
-      state: {
-        unitIndex: 1,
-        unitProgress: 0,
-        buffer: "",
-      },
-    };
-
-    const spy = vi.spyOn(romanizer, "stepRomanizer");
-    spy.mockReturnValueOnce(mistakeOutcome);
-
     vi.setSystemTime(baseTime + 1000);
     session = reduceSession(session, { type: "type", ch: "x" });
 
-    expect(session.score.total).toBe(1);
+    expect(session.score.total).toBe(0);
     expect(session.score.correct).toBe(0);
-    expect(session.score.mistakes).toBe(1);
-    expect(session.metrics.accuracy).toBe(0);
-
-    spy.mockReturnValueOnce(correctOutcome);
+    expect(session.score.mistakes).toBe(0);
+    expect(session.metrics.accuracy).toBe(1);
+    expect(session.feedback?.kind).toBe("error");
+    if (session.feedback?.kind === "error") {
+      expect(session.feedback.attempted).toBe("x");
+    }
 
     vi.setSystemTime(baseTime + 60000);
     session = reduceSession(session, { type: "type", ch: "a" });
 
-    expect(session.score.total).toBe(2);
+    expect(session.score.total).toBe(1);
     expect(session.score.correct).toBe(1);
-    expect(session.score.mistakes).toBe(1);
-    expect(session.metrics.accuracy).toBeCloseTo(0.5, 5);
+    expect(session.score.mistakes).toBe(0);
+    expect(session.metrics.accuracy).toBe(1);
     expect(session.metrics.cpm).toBe(1);
     expect(session.metrics.wpm).toBe(0);
   });

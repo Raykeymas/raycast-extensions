@@ -12,5 +12,6 @@ export function getCurrentISOTime(): string {
 
 // ISO文字列から経過秒数を計算
 export function getElapsedSeconds(isoTime: string): number {
-  return Math.floor((Date.now() - new Date(isoTime).getTime()) / 1000);
+  const elapsedMs = Date.now() - new Date(isoTime).getTime();
+  return Math.max(0, Math.floor(elapsedMs / 1000));
 }

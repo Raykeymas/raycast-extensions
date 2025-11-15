@@ -32,6 +32,14 @@ describe("getCurrentISOTime", () => {
 });
 
 describe("getElapsedSeconds", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   test("ISO文字列からの経過秒数を計算する", () => {
     const baseTime = new Date("2024-01-01T00:00:00.000Z");
     const isoTime = baseTime.toISOString();
@@ -52,12 +60,11 @@ describe("getElapsedSeconds", () => {
   });
 
   test("負の値にならない", () => {
-    const future = new Date(Date.now() + 10000); // 10秒後
-    const isoTime = future.toISOString();
+    const now = new Date("2024-01-01T00:00:00.000Z");
+    vi.setSystemTime(now);
+    const futureIso = new Date(now.getTime() + 10000).toISOString(); // 10秒後
 
-    // 現在時刻は未来より前なので負の値になる可能性がある
-    // 実際の関数の実装に合わせて調整
-    const elapsed = getElapsedSeconds(isoTime);
-    expect(typeof elapsed).toBe("number");
+    const elapsed = getElapsedSeconds(futureIso);
+    expect(elapsed).toBe(0);
   });
 });

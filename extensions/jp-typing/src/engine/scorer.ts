@@ -47,13 +47,12 @@ export function skipScore(state: ScoreState): ScoreState {
 // メトリクスへの変換
 export function toMetrics(state: ScoreState, nowMs: number): TypingMetrics {
   const elapsedMs = nowMs - state.startedAt;
-  const elapsedMinutes = elapsedMs / (1000 * 60);
 
   // CPM (characters per minute)
-  const cpm = elapsedMinutes > 0 ? Math.round((state.correct * 60) / (elapsedMs / 1000)) : 0;
+  const cpm = elapsedMs > 0 ? Math.round((state.correct * 60000) / elapsedMs) : 0;
 
   // WPM (words per minute) - 5打を1語として換算
-  const wpm = elapsedMinutes > 0 ? Math.round(cpm / 5) : 0;
+  const wpm = cpm > 0 ? Math.round(cpm / 5) : 0;
 
   // 正確性
   const accuracy = state.total > 0 ? state.correct / state.total : 1;

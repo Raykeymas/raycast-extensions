@@ -11,9 +11,13 @@ interface TypingPromptProps {
   config: SessionConfig;
 }
 
+/** 描画に必要なタイピングプロンプト情報 */
 export interface TypingPromptRender {
+  /** Raycast Detail に表示する Markdown */
   markdown: string;
+  /** 読み/ローマ字の補助表示（単語モードのみ） */
   readingLine?: string;
+  /** 進捗バー表示用のメトリクス */
   progress: {
     percent: number;
     completedUnits: number;

@@ -159,11 +159,11 @@ const LIBERAL_MAP: Record<Kana, string[]> = {
   せ: ["se", "ce"],
   そ: ["so"],
   た: ["ta"],
-  ち: ["chi", "ti", "ti"],
-  つ: ["tsu", "tu", "tu"],
+  ち: ["chi", "ti"],
+  つ: ["tsu", "tu"],
   て: ["te"],
   と: ["to"],
-  は: ["ha", "ha"],
+  は: ["ha"],
   ひ: ["hi"],
   ふ: ["fu", "hu"],
   へ: ["he"],
@@ -177,7 +177,7 @@ const LIBERAL_MAP: Record<Kana, string[]> = {
   れ: ["re"],
   ろ: ["ro"],
   わ: ["wa"],
-  を: ["wo", "wo"],
+  を: ["wo"],
   ん: ["n", "nn"],
 };
 

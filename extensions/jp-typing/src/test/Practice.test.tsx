@@ -51,7 +51,7 @@ vi.mock("../utils/time", () => ({
   formatTime: vi.fn((seconds: number) => `${seconds}s`),
 }));
 
-vi.mock("./components/TypingPrompt", () => ({
+vi.mock("../views/components/TypingPrompt", () => ({
   TypingPrompt: vi.fn(() => ({
     markdown: "test prompt",
     readingLine: "ローマ字: test",

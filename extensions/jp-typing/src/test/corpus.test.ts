@@ -99,9 +99,9 @@ describe("コーパスデータの整合性", () => {
 
   test("文章と読みの対応が正しい", () => {
     SENTENCE_CORPUS.forEach((item) => {
-      expect(item.reading).toBe(item.reading);
       expect(item.text.length).toBeGreaterThan(0);
       expect(item.reading.length).toBeGreaterThan(0);
+      expect(item.reading).toMatch(/^[ぁ-んー\s。、]+$/u);
     });
   });
 });
